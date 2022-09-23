@@ -27,8 +27,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.MessagingStyle.Message;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import org.json.JSONArray;
@@ -43,13 +43,13 @@ import de.appplant.cordova.plugin.notification.action.Action;
 import de.appplant.cordova.plugin.notification.action.ActionGroup;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
-import static android.support.v4.app.NotificationCompat.DEFAULT_LIGHTS;
-import static android.support.v4.app.NotificationCompat.DEFAULT_SOUND;
-import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
-import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
-import static android.support.v4.app.NotificationCompat.VISIBILITY_SECRET;
+import static androidx.core.app.NotificationCompat.DEFAULT_LIGHTS;
+import static androidx.core.app.NotificationCompat.DEFAULT_SOUND;
+import static androidx.core.app.NotificationCompat.DEFAULT_VIBRATE;
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
+import static androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC;
+import static androidx.core.app.NotificationCompat.VISIBILITY_SECRET;
 
 /**
  * Wrapper around the JSON object passed through JS which contains all
@@ -87,7 +87,7 @@ public final class Options {
     public Options(JSONObject options) {
         this.options = options;
         this.context = null;
-        this.assets  = null;
+        this.assets = null;
     }
 
     /**
@@ -99,13 +99,13 @@ public final class Options {
     public Options(Context context, JSONObject options) {
         this.context = context;
         this.options = options;
-        this.assets  = AssetUtil.getInstance(context);
+        this.assets = AssetUtil.getInstance(context);
     }
 
     /**
      * Application context.
      */
-    public Context getContext () {
+    public Context getContext() {
         return context;
     }
 
@@ -256,11 +256,9 @@ public final class Options {
 
         if (cfg instanceof String) {
             hex = options.optString("led");
-        } else
-        if (cfg instanceof JSONArray) {
+        } else if (cfg instanceof JSONArray) {
             hex = options.optJSONArray("led").optString(0);
-        } else
-        if (cfg instanceof JSONObject) {
+        } else if (cfg instanceof JSONObject) {
             hex = options.optJSONObject("led").optString("color");
         }
 
@@ -268,7 +266,7 @@ public final class Options {
             return 0;
 
         try {
-            hex      = stripHex(hex);
+            hex = stripHex(hex);
             int aRGB = Integer.parseInt(hex, 16);
 
             return aRGB + 0xFF000000;
@@ -364,12 +362,12 @@ public final class Options {
      */
     Bitmap getLargeIcon() {
         String icon = options.optString("icon", null);
-        Uri uri     = assets.parse(icon);
-        Bitmap bmp  = null;
+        Uri uri = assets.parse(icon);
+        Bitmap bmp = null;
 
         try {
             bmp = assets.getIconFromUri(uri);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -388,7 +386,7 @@ public final class Options {
      */
     int getSmallIcon() {
         String icon = options.optString("smallIcon", DEFAULT_ICON);
-        int resId   = assets.getResId(icon);
+        int resId = assets.getResId(icon);
 
         if (resId == 0) {
             resId = assets.getResId(DEFAULT_ICON);
@@ -456,15 +454,13 @@ public final class Options {
 
         if (isWithDefaultSound()) {
             defaults |= DEFAULT_SOUND;
-        } else
-        if (isWithoutSound()) {
+        } else if (isWithoutSound()) {
             defaults &= DEFAULT_SOUND;
         }
 
         if (isWithDefaultLights()) {
             defaults |= DEFAULT_LIGHTS;
-        } else
-        if (isWithoutLights()) {
+        } else if (isWithoutLights()) {
             defaults &= DEFAULT_LIGHTS;
         }
 
@@ -576,7 +572,7 @@ public final class Options {
      *         support multiple attachments like iOS.
      */
     List<Bitmap> getAttachments() {
-        JSONArray paths   = options.optJSONArray("attachments");
+        JSONArray paths = options.optJSONArray("attachments");
         List<Bitmap> pics = new ArrayList<Bitmap>();
 
         if (paths == null)
@@ -604,22 +600,20 @@ public final class Options {
      * Gets the list of actions to display.
      */
     Action[] getActions() {
-        Object value      = options.opt("actions");
-        String groupId    = null;
+        Object value = options.opt("actions");
+        String groupId = null;
         JSONArray actions = null;
         ActionGroup group = null;
 
         if (value instanceof String) {
             groupId = (String) value;
-        } else
-        if (value instanceof JSONArray) {
+        } else if (value instanceof JSONArray) {
             actions = (JSONArray) value;
         }
 
         if (groupId != null) {
             group = ActionGroup.lookup(groupId);
-        } else
-        if (actions != null && actions.length() > 0) {
+        } else if (actions != null && actions.length() > 0) {
             group = ActionGroup.parse(context, actions);
         }
 
@@ -643,13 +637,13 @@ public final class Options {
             return null;
 
         Message[] messages = new Message[list.length()];
-        long now           = new Date().getTime();
+        long now = new Date().getTime();
 
         for (int i = 0; i < messages.length; i++) {
             JSONObject msg = list.optJSONObject(i);
             String message = msg.optString("message");
             long timestamp = msg.optLong("date", now);
-            String person  = msg.optString("person", null);
+            String person = msg.optString("person", null);
 
             messages[i] = new Message(message, timestamp, person);
         }

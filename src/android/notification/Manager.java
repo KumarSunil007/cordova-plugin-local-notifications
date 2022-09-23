@@ -29,7 +29,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.service.notification.StatusBarNotification;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +43,7 @@ import de.appplant.cordova.plugin.badge.BadgeImpl;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 import static android.os.Build.VERSION_CODES.O;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
 import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY_ID;
 import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
 
@@ -85,18 +85,18 @@ public final class Manager {
     /**
      * Check if app has local notification permission.
      */
-    public boolean hasPermission () {
+    public boolean hasPermission() {
         return getNotCompMgr().areNotificationsEnabled();
     }
 
     /**
      * Schedule local notification specified by request.
      *
-     * @param request Set of notification options.
+     * @param request  Set of notification options.
      * @param receiver Receiver to handle the trigger event.
      */
-    public Notification schedule (Request request, Class<?> receiver) {
-        Options options    = request.getOptions();
+    public Notification schedule(Request request, Class<?> receiver) {
+        Options options = request.getOptions();
         Notification toast = new Notification(context, options);
 
         toast.schedule(request, receiver);
@@ -132,7 +132,7 @@ public final class Manager {
      * @param updates  JSON object with notification options.
      * @param receiver Receiver to handle the trigger event.
      */
-    public Notification update (int id, JSONObject updates, Class<?> receiver) {
+    public Notification update(int id, JSONObject updates, Class<?> receiver) {
         Notification notification = get(id);
 
         if (notification == null)
@@ -148,7 +148,7 @@ public final class Manager {
      *
      * @param id The notification ID.
      */
-    public Notification clear (int id) {
+    public Notification clear(int id) {
         Notification toast = get(id);
 
         if (toast != null) {
@@ -161,7 +161,7 @@ public final class Manager {
     /**
      * Clear all local notifications.
      */
-    public void clearAll () {
+    public void clearAll() {
         List<Notification> toasts = getByType(TRIGGERED);
 
         for (Notification toast : toasts) {
@@ -177,7 +177,7 @@ public final class Manager {
      *
      * @param id The notification ID
      */
-    public Notification cancel (int id) {
+    public Notification cancel(int id) {
         Notification toast = get(id);
 
         if (toast != null) {
@@ -190,7 +190,7 @@ public final class Manager {
     /**
      * Cancel all local notifications.
      */
-    public void cancelAll () {
+    public void cancelAll() {
         List<Notification> notifications = getAll();
 
         for (Notification notification : notifications) {
@@ -230,7 +230,7 @@ public final class Manager {
             return getIds();
 
         StatusBarNotification[] activeToasts = getActiveNotifications();
-        List<Integer> activeIds              = new ArrayList<Integer>();
+        List<Integer> activeIds = new ArrayList<Integer>();
 
         for (StatusBarNotification toast : activeToasts) {
             activeIds.add(toast.getId());
@@ -316,7 +316,7 @@ public final class Manager {
      * List of properties from all local notifications from given type.
      *
      * @param type
-     *      The notification life cycle type
+     *             The notification life cycle type
      */
     public List<JSONObject> getOptionsByType(Notification.Type type) {
         ArrayList<JSONObject> options = new ArrayList<JSONObject>();
@@ -338,13 +338,13 @@ public final class Manager {
      */
     public Options getOptions(int id) {
         SharedPreferences prefs = getPrefs();
-        String toastId          = Integer.toString(id);
+        String toastId = Integer.toString(id);
 
         if (!prefs.contains(toastId))
             return null;
 
         try {
-            String json     = prefs.getString(toastId, null);
+            String json = prefs.getString(toastId, null);
             JSONObject dict = new JSONObject(json);
 
             return new Options(context, dict);
@@ -375,7 +375,7 @@ public final class Manager {
      *
      * @param badge The badge number.
      */
-    public void setBadge (int badge) {
+    public void setBadge(int badge) {
         if (badge == 0) {
             new BadgeImpl(context).clearBadge();
         } else {
@@ -397,7 +397,7 @@ public final class Manager {
     /**
      * Shared private preferences for the application.
      */
-    private SharedPreferences getPrefs () {
+    private SharedPreferences getPrefs() {
         return context.getSharedPreferences(PREF_KEY_ID, Context.MODE_PRIVATE);
     }
 

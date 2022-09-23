@@ -27,9 +27,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.MessagingStyle.Message;
+import androidx.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -123,7 +123,7 @@ public final class Builder {
             return new Notification(context, options);
         }
 
-        Uri sound     = options.getSound();
+        Uri sound = options.getSound();
         Bundle extras = new Bundle();
 
         extras.putInt(Notification.EXTRA_ID, options.getId());
@@ -226,7 +226,7 @@ public final class Builder {
      */
     private void applyStyle(NotificationCompat.Builder builder) {
         Message[] messages = options.getMessages();
-        String summary     = options.getSummary();
+        String summary = options.getSummary();
 
         if (messages != null) {
             applyMessagingStyle(builder, messages);
@@ -267,7 +267,7 @@ public final class Builder {
      * @param messages The messages to add to the conversation.
      */
     private void applyMessagingStyle(NotificationCompat.Builder builder,
-                                     Message[] messages) {
+            Message[] messages) {
 
         NotificationCompat.MessagingStyle style;
 
@@ -288,11 +288,11 @@ public final class Builder {
      * @param pics    The pictures to show.
      */
     private void applyBigPictureStyle(NotificationCompat.Builder builder,
-                                      List<Bitmap> pics) {
+            List<Bitmap> pics) {
 
         NotificationCompat.BigPictureStyle style;
         String summary = options.getSummary();
-        String text    = options.getText();
+        String text = options.getText();
 
         style = new NotificationCompat.BigPictureStyle(builder)
                 .setSummaryText(summary == null ? text : summary)
@@ -342,7 +342,7 @@ public final class Builder {
      * @param token   The media session token.
      */
     private void applyMediaStyle(NotificationCompat.Builder builder,
-                                 MediaSessionCompat.Token token) {
+            MediaSessionCompat.Token token) {
         MediaStyle style;
 
         style = new MediaStyle(builder)
@@ -413,7 +413,7 @@ public final class Builder {
      *
      * @param builder Local notification builder instance.
      */
-    private void applyActions (NotificationCompat.Builder builder) {
+    private void applyActions(NotificationCompat.Builder builder) {
         Action[] actions = options.getActions();
         NotificationCompat.Action.Builder btn;
 
@@ -421,9 +421,9 @@ public final class Builder {
             return;
 
         for (Action action : actions) {
-             btn = new NotificationCompat.Action.Builder(
-                     action.getIcon(), action.getTitle(),
-                     getPendingIntentForAction(action));
+            btn = new NotificationCompat.Action.Builder(
+                    action.getIcon(), action.getTitle(),
+                    getPendingIntentForAction(action));
 
             if (action.isWithInput()) {
                 btn.addRemoteInput(action.getInput());
@@ -439,7 +439,7 @@ public final class Builder {
      *
      * @param action Notification action needing the PendingIntent
      */
-    private PendingIntent getPendingIntentForAction (Action action) {
+    private PendingIntent getPendingIntentForAction(Action action) {
         Intent intent = new Intent(context, clickActivity)
                 .putExtra(Notification.EXTRA_ID, options.getId())
                 .putExtra(Action.EXTRA_ID, action.getId())
